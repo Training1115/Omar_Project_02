@@ -10,37 +10,67 @@
 body{
     padding: 0;
     margin: 0;
-}
-#nav{
     
+}
+/* #nav{
+    position: fixed;
+    width: 100%;
+} */
+#nav , #menu {
+    background-color: #333;
     display: flex;
     color: black;
     justify-content: space-between;
     border-bottom: 1px solid #000;
     height: 50px;
+    
     align-items: center;
     padding-left: 50px;
     font-size: 25px;
     padding-right: 50px;
+    
 }
 #menu{
     display: flex;
    gap: 30px;
 }
-a{ align-items: center;
+#nav a , #menu a{ align-items: center;
     text-decoration: none;
-    color: black;
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 15px;
+    font-size: 25px;
 }
+#nav a:hover , #menu a:hover {
+    background-color: #ddd;
+    color: black;
+  }
 .search{
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 15px;
+    background-color: white;
+    padding: 1px;
+    border-radius: 4px;
+    
+}
+.search input {
+    border: 0;
+    height: 100%;
+    width: 100%;
     
 }
 #submit_search{
+    padding-top: 3px;
     border-style: hidden;
-    background-color: white;
     font-size: 21px;
+    background-color: white;
+}
+#submit_search:hover{
+    background-color: #ddd;
+    color: black;
 }
 #logo{
     padding-top: 7px;
@@ -49,5 +79,66 @@ a{ align-items: center;
 #container{
     display: grid;
     grid-template-columns: 1fr 3.5fr 1fr;
-    height: 100%;
+    height: 85vh;
+}
+.sideNav , #sideNav{
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    background-color: white;
+    }
+.sideNav  button ,  #sideNav button  , #postBtn button{
+    border-width: 0.5px;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 0.90rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+
+}
+.sideNav  button:hover ,  #sideNav button:hover , #postBtn button:hover{
+    background-color: #333;
+    color: #f2f2f2;
+}
+#newPost{
+    width: 100%;
+    height: 20%;
+}
+#newPost-in{
+    border: 0;
+    border-radius: 5px;
+    width:89%;
+    height:60%;
+    
+}
+#postBtn {
+    padding-left: 3.78rem;
+}
+#name_date{
+display: flex;
+
+}
+#post{
+    width: 100%;
+    height: 20%;
+}
+#postSlider{
+    height:70svh;
+    overflow:scroll;
+    overflow-x:hidden;
+}
+#sidebar{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+#friend_list{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height:43vh;
+    overflow:scroll;
+    overflow-x:hidden;
 }
