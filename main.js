@@ -28,28 +28,17 @@ const hideEveryThing = () => {
     shop.addClass('hidden');
     cart.addClass('hidden');
     user.addClass('hidden');
-
-
 }
-
-
-
-
-
-
 
 let firstName = "";
 let lastName = "";
 let email = "";
 let password = "";
 
-
-
 const renderLogin = (mn_ween_jay) => {
     hideEveryThing();
     user.removeClass('hidden');
-    
-   
+    signForm.empty()
     const register = $(`
         <p class="title">signup</p>
           <input
@@ -81,7 +70,7 @@ const renderLogin = (mn_ween_jay) => {
             type="password"
             placeholder="Password"
           />
-           <p class="toggle-message">Already have an account? <button type='button' id="switch_login">Login</button></p>
+           <p class="toggle-message">Already have an account?<span type='button' id="switch_login" class='toggle-form-btns'>Login</span> </p>
         `)
     const login_card = $(` 
         <p class="title">login</p>
@@ -99,9 +88,9 @@ const renderLogin = (mn_ween_jay) => {
             type="password"
             placeholder="Password"
           />
-        <p class="toggle-message">Don't have an account? <button type='button' id="switch_signup">Sign Up</button></p>`)
+        <p class="toggle-message">Don't have an account? <span type='button' id="switch_signup" class='toggle-form-btns'>Sign Up</span></p>`)
 
-          const submitButton =$(`<input
+    const submitButton = $(`<input
             title="Submit Login"
             id="sub_login"
             class="sub_signin"
@@ -109,25 +98,27 @@ const renderLogin = (mn_ween_jay) => {
             placeholder="Submit"
           />`)
 
-        
-          if (mn_ween_jay==='signup'){register.appendTo(signForm)
-            submitButton.appendTo(signForm);
-          }
-          else{
-          login_card.appendTo(signForm);
-          submitButton.appendTo(signForm);}
+
+    if (mn_ween_jay === 'signup') {
+        register.appendTo(signForm)
+        submitButton.appendTo(signForm);
+    }
+    else {
+        login_card.appendTo(signForm);
+        submitButton.appendTo(signForm);
+    }
 
 }
 
-$('#switch_login').on('click', (e) => {
-    e.preventDefault(); // Prevent default behavior
-    console.log('first'); // Log a message to the console
-    renderLogin(); // Call the renderLogin function
+
+$(document).on('click', '#switch_login', function () {
+    renderLogin()
+});
+$(document).on('click', '#switch_signup', function () {
+    renderLogin('signup');
 });
 
-$('#switch_signup').on('click', () => {
-    renderLogin('signup');
-})
+
 
 const navBar = $(
     `<div id="nav-bar">
@@ -144,12 +135,12 @@ const navBar = $(
 navBar.appendTo(header);
 
 
-const handleSearch = ()=>{
+const handleSearch = () => {
     const value = $('#search_input').val()
     console.log('value :>> ', value);
-    
-    
-    };
+
+
+};
 
 const renderHome = () => {
     hideEveryThing();
@@ -185,7 +176,7 @@ const renderHome = () => {
 
     );
     search.appendTo(home);
-    $('#search_input').on('change',()=>{
+    $('#search_input').on('change', () => {
         handleSearch()
     })
 
@@ -587,13 +578,13 @@ const renderShop = () => {
 
 
 const renderCart = () => {
-     hideEveryThing();
-    
-    }
+    hideEveryThing();
+
+}
 
 renderHome();
 const activate_search = () => {
-    
+
 }
 
 
