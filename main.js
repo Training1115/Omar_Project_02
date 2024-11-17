@@ -596,7 +596,8 @@ const activate_search = () => {
     
 }
 
+
 $('#Shop-nav').on('click', () => {
     renderShop();
 });
-// review that statement
+
