@@ -1,44 +1,198 @@
+// activate back button in browser 
+
+const back = $(`<button id="backButton">Go Back</button>`);
+
+$(document).ready(function() {
+    $('#backButton').on('click', function() {
+        window.history.back();
+    });
+});
+
+
+
+// jQuery Element Selections for Page Components and UI Elements
+
 const root = $('#root');
 const home = $('#home');
 const nav = $('#nav');
 const header = $("header");
+const shop = $("#shop")
 const wrap = $(`<div id='wrap_C'></div>`);
+const user = $("#user");
+const cart = $("#cart");
+const signForm = $('#signForm');
+const search = $('#search');
+
+const hideEveryThing = () => {
+    home.addClass('hidden');
+    shop.addClass('hidden');
+    cart.addClass('hidden');
+    user.addClass('hidden');
+
+
+}
+
+
+
+
+
+
+
+let firstName = "";
+let lastName = "";
+let email = "";
+let password = "";
+
+
+
+const renderLogin = (mn_ween_jay) => {
+    hideEveryThing();
+    user.removeClass('hidden');
+    
+   
+    const register = $(`
+        <p class="title">signup</p>
+          <input
+            title="firstName"
+            id="firstName"
+            class="input_box"
+            type="text"
+            placeholder="firstName"
+          />
+          <input
+            title="lastName"
+            id="lastName"
+            class="input_box"
+            type="text"
+            placeholder="lastName"
+            />
+
+            <input
+            title="UserName"
+            id="userName_S"
+            class="input_box"
+            type="text"
+            placeholder="UserName"
+          />
+        <input
+            title="Password"
+            id="password_s"
+            class="input_box"
+            type="password"
+            placeholder="Password"
+          />
+           <p class="toggle-message">Already have an account? <button type='button' id="switch_login">Login</button></p>
+        `)
+    const login_card = $(` 
+        <p class="title">login</p>
+       <input
+            title="UserName"
+            id="userName_L"
+            class="input_box"
+            type="text"
+            placeholder="UserName"
+          />
+        <input
+            title="Password"
+            id="password_l"
+            class="input_box"
+            type="password"
+            placeholder="Password"
+          />
+        <p class="toggle-message">Don't have an account? <button type='button' id="switch_signup">Sign Up</button></p>`)
+
+          const submitButton =$(`<input
+            title="Submit Login"
+            id="sub_login"
+            class="sub_signin"
+            type="submit"
+            placeholder="Submit"
+          />`)
+
+        
+          if (mn_ween_jay==='signup'){register.appendTo(signForm)
+            submitButton.appendTo(signForm);
+          }
+          else{
+          login_card.appendTo(signForm);
+          submitButton.appendTo(signForm);}
+
+}
+
+$('#switch_login').on('click', (e) => {
+    e.preventDefault(); // Prevent default behavior
+    console.log('first'); // Log a message to the console
+    renderLogin(); // Call the renderLogin function
+});
+
+$('#switch_signup').on('click', () => {
+    renderLogin('signup');
+})
+
 const navBar = $(
     `<div id="nav-bar">
     <div id="logo"><img src="img/logo/Book1.jpg" alt=""  width="140px" height="55px"></div>  
-    <div id="menu"><a id="main-nav" href=#><i title='Main'  class='bx bx-home-smile'> Main</i></a>
-    <a href=#><i title='Category' class='bx bx-category'> Category</i></a>
-    <a href=#><i title='Newest' class='bx bx-library'>Newest</i></a> 
-     <a href=#> <i title='Most popular' class='bx bx-planet'> Most Popular</i></a> 
-     <a href=#><i title='user' class='bx bx-user'> User</i></a> 
-     </div> </div>`
+   <div id="menu">
+        <li id="main-nav" class="nav-link"><i title='Main' class='bx bx-home-smile'> Main</i></li>
+        <li id="Shop-nav" class="nav-link"><i title='Shop' class='bx bx-category'> Shop</i></li>
+        <li id="Cart-nav" class="nav-link"><i title='Cart' class='bx bx-library'>Cart</i></li> 
+        <li id="user-nav" class="nav-link"><i title='User  ' class='bx bx-user'> User</i></li> 
+        </div> </div>`
+
+
+);
+navBar.appendTo(header);
+
+
+const handleSearch = ()=>{
+    const value = $('#search_input').val()
+    console.log('value :>> ', value);
+    
+    
+    };
+
+const renderHome = () => {
+    hideEveryThing();
+    home.removeClass('hidden')
+    const sign_in = $(
+        `<div id="sign_in">
+        <button id="login">Sign in</button>
+        <button id="signup">Sign up</button>
+      </div>`
+    )
+    sign_in.appendTo(home);
+
+
+    $('#login').on('click', () => {
+        renderLogin('login')
+    });
+    $('#signup').on('click', () => { renderLogin('signup') });
+
+
+
+    const welcome = $(
+        `<div id="welcome">
+        <p id="welcome-p">Welcome To BOOKISH <br></br> Your Adventure Awaits!</p>
+        </div>`
+    );
+    welcome.appendTo(home);
+
+    const search = $(
+        `<div id="search" class="search">
+        <button id='submit_search'><i title='search' class='bx bx-search-alt'> Search </i></button>
+        <input title='search here' id="search_input" type="text" placeholder="Type To Search">
+        </div>`
 
     );
-    navBar.appendTo(header);
+    search.appendTo(home);
+    $('#search_input').on('change',()=>{
+        handleSearch()
+    })
 
-const sign_in = $(
-    `<div id="sign_in">
-    <button id="login">Sign in</button>
-    <button id="signup">Sign up</button>
-  </div>`
-)
-sign_in.appendTo(home);
-const welcome = $(
-    `<div id="welcome">
-    <p id="welcome-p">Welcome To BOOKISH <br></br> Your Adventure Awaits!</p>
-    </div>`
-);
-welcome.appendTo(home);
+}
 
-const search = $(
-    `<div id="search" class="search">
-    <button id='submit_search'><i title='search' class='bx bx-search-alt'> Search </i></button>
-    <input title='search here' id="search" type="text" placeholder="Type To Search">
-    </div>`
-    
-);
-search.appendTo(home);
-wrap.appendTo(home);
+
+
 
 
 const footer = $(`<footer id="footer"><img src="img/logo/Book1.jpg" alt="" width="140px" height="55px" ></footer>`
@@ -46,46 +200,8 @@ const footer = $(`<footer id="footer"><img src="img/logo/Book1.jpg" alt="" width
 footer.appendTo(root);
 
 
-
-
-
-const show_page = (fromId, toId) => {
-    const slides = $('.slide');
-    let currentSlideVisible = false;
-
-    slides.each(function () {
-        if ($(this).is(':visible')) {
-            currentSlideVisible = true;
-        }
-    });
-
-    if (!currentSlideVisible) {
-        toId = 'home';
-    }
-
-    if (fromId) {
-        const fromSlide = document.getElementById(fromId);
-        if (fromSlide) {
-            $(fromSlide).removeClass('active').hide();
-        }
-    }
-
-    const toSlide = document.getElementById(toId);
-    if (toSlide) {
-        $(toSlide).addClass('active').show();
-    }
-};
-
-$(document).ready(() => {
-    $('#home').show().addClass('active'); // Show the home slide on page load
-});
-
-
-
-
-
 const books = [
-    
+
     {
         "id": "9781098103828",
         "img": "https://itbook.store/img/books/9781098103828.png",
@@ -257,7 +373,7 @@ const books = [
         "authorName": "Unknown Author",
         "price": "$29.99"
     },
-    
+
     {
         "id": "9781098103828",
         "img": "https://itbook.store/img/books/9781098103828.png",
@@ -433,10 +549,19 @@ const books = [
 ]
 
 
-const book_cards = () => {
-    books.forEach((element) => {
+
+
+
+
+
+
+const renderShop = () => {
+    hideEveryThing();
+    shop.removeClass('hidden');
+    books.forEach((element, indx) => {
         const card = $(`
-                <div class="book_card" >
+                <div class="book_card aos-item"  data-aos="fade-up"
+             data-aos-duration="1200" data-id=${indx + 1}>
                     <img class="mods"  src="${element.img}" alt="${element.nameOfBook}" />
                     <div class="rating">${'★'.repeat(element.rate)}${'☆'.repeat(5 - element.rate)}</div>
                     <div id="book_name" >
@@ -454,6 +579,24 @@ const book_cards = () => {
             `);
         card.appendTo(wrap);
     });
-};
 
-book_cards();
+    wrap.appendTo(shop)
+}
+
+
+
+
+const renderCart = () => {
+     hideEveryThing();
+    
+    }
+
+renderHome();
+const activate_search = () => {
+    
+}
+
+$('#Shop-nav').on('click', () => {
+    renderShop();
+});
+// review that statement
