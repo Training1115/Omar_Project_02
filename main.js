@@ -1,12 +1,15 @@
 // activate back button in browser 
 
-const back = $(`<button id="backButton">Go Back</button>`);
-
-$(document).ready(function() {
-    $('#backButton').on('click', function() {
-        window.history.back();
+!function ($) {
+    $(document).ready(function () {
+        $('#ELEMENT').append('<div class="browser_back"><a class="browser_back_link" alt="go one page back" title="go one page back" href="#browser_back">back</a></div>');
+        $('#ELEMENT .browser_back a').click(function () {
+            window.history.go(-1);
+            console.log('first')
+            return false;
+        });
     });
-});
+}(jQuery);
 
 
 
@@ -28,28 +31,12 @@ const hideEveryThing = () => {
     shop.addClass('hidden');
     cart.addClass('hidden');
     user.addClass('hidden');
-
-
 }
-
-
-
-
-
-
-
-let firstName = "";
-let lastName = "";
-let email = "";
-let password = "";
-
-
 
 const renderLogin = (mn_ween_jay) => {
     hideEveryThing();
     user.removeClass('hidden');
-    
-   
+    signForm.empty()
     const register = $(`
         <p class="title">signup</p>
           <input
@@ -58,6 +45,8 @@ const renderLogin = (mn_ween_jay) => {
             class="input_box"
             type="text"
             placeholder="firstName"
+            required
+
           />
           <input
             title="lastName"
@@ -65,6 +54,7 @@ const renderLogin = (mn_ween_jay) => {
             class="input_box"
             type="text"
             placeholder="lastName"
+            required
             />
 
             <input
@@ -73,6 +63,7 @@ const renderLogin = (mn_ween_jay) => {
             class="input_box"
             type="text"
             placeholder="UserName"
+            required
           />
         <input
             title="Password"
@@ -80,8 +71,9 @@ const renderLogin = (mn_ween_jay) => {
             class="input_box"
             type="password"
             placeholder="Password"
+            required
           />
-           <p class="toggle-message">Already have an account? <button type='button' id="switch_login">Login</button></p>
+           <p class="toggle-message">Already have an account?<span type='button' id="switch_login" class='toggle-form-btns'>Login</span> </p>
         `)
     const login_card = $(` 
         <p class="title">login</p>
@@ -91,6 +83,7 @@ const renderLogin = (mn_ween_jay) => {
             class="input_box"
             type="text"
             placeholder="UserName"
+            required
           />
         <input
             title="Password"
@@ -98,10 +91,12 @@ const renderLogin = (mn_ween_jay) => {
             class="input_box"
             type="password"
             placeholder="Password"
+            required
           />
-        <p class="toggle-message">Don't have an account? <button type='button' id="switch_signup">Sign Up</button></p>`)
+        <p class="toggle-message">Don't have an account? <span type='button' id="switch_signup" class='toggle-form-btns'>Sign Up</span></p>`)
 
-          const submitButton =$(`<input
+
+    const submitButton = $(`<input
             title="Submit Login"
             id="sub_login"
             class="sub_signin"
@@ -109,33 +104,68 @@ const renderLogin = (mn_ween_jay) => {
             placeholder="Submit"
           />`)
 
-        
-          if (mn_ween_jay==='signup'){register.appendTo(signForm)
-            submitButton.appendTo(signForm);
-          }
-          else{
-          login_card.appendTo(signForm);
-          submitButton.appendTo(signForm);}
+
+    if (mn_ween_jay === 'signup') {
+        register.appendTo(signForm)
+        submitButton.appendTo(signForm);
+    }
+    else {
+        login_card.appendTo(signForm);
+        submitButton.appendTo(signForm);
+    }
 
 }
 
-$('#switch_login').on('click', (e) => {
-    e.preventDefault(); // Prevent default behavior
-    console.log('first'); // Log a message to the console
-    renderLogin(); // Call the renderLogin function
+
+
+$(document).on('click', '#switch_login', function () {
+    renderLogin()
+});
+$(document).on('click', '#switch_signup', function () {
+    renderLogin('signup');
+});
+$(document).on('click', '#sub_login', function () {
 });
 
-$('#switch_signup').on('click', () => {
-    renderLogin('signup');
+signForm.on('submit', (e) => {
+    e.preventDefault()
+    const users = JSON.parse(localStorage.getItem('users'))
+    const loginUserName = $('#userName_L').val()
+    const loginPassword = $('#password_l').val()
+    const firstNameVal = $('#firstName').val()
+    const lastNameVal = $('#lastName').val()
+    const registerUserName = $('#userName_S').val()
+    const registerPassword = $('#password_s').val()
+    if (firstNameVal) {
+        const findUnique = users.find((user) => user.userName === registerUserName)
+        if (findUnique) {
+            //TODO: alert 'user already exist' 
+            alert('User Already Exist')
+        } else {
+            const newUser = {
+                id: users.length + 1,
+                name: `${firstNameVal} ${lastNameVal}`,
+                userName: registerUserName,
+                password: registerPassword
+            }
+            users.push(newUser)
+            localStorage.setItem('users', JSON.stringify(users))
+
+        }
+    } else {
+        console.log('This is login')
+    }
+    console.log('e :>> ', e);
 })
+
 
 const navBar = $(
     `<div id="nav-bar">
     <div id="logo"><img src="img/logo/Book1.jpg" alt=""  width="140px" height="55px"></div>  
    <div id="menu">
         <li id="main-nav" class="nav-link"><i title='Main' class='bx bx-home-smile'> Main</i></li>
-        <li id="Shop-nav" class="nav-link"><i title='Shop' class='bx bx-category'> Shop</i></li>
-        <li id="Cart-nav" class="nav-link"><i title='Cart' class='bx bx-library'>Cart</i></li> 
+        <li id="shop-nav" class="nav-link"><i title='Shop' class='bx bx-category'> Shop</i></li>
+        <li id="cart-nav" class="nav-link"><i title='Cart' class='bx bx-library'>Cart</i></li> 
         <li id="user-nav" class="nav-link"><i title='User  ' class='bx bx-user'> User</i></li> 
         </div> </div>`
 
@@ -144,16 +174,17 @@ const navBar = $(
 navBar.appendTo(header);
 
 
-const handleSearch = ()=>{
+const handleSearch = () => {
     const value = $('#search_input').val()
     console.log('value :>> ', value);
-    
-    
-    };
+
+
+};
 
 const renderHome = () => {
     hideEveryThing();
     home.removeClass('hidden')
+
     const sign_in = $(
         `<div id="sign_in">
         <button id="login">Sign in</button>
@@ -185,7 +216,7 @@ const renderHome = () => {
 
     );
     search.appendTo(home);
-    $('#search_input').on('change',()=>{
+    $('#search_input').on('change', () => {
         handleSearch()
     })
 
@@ -572,8 +603,8 @@ const renderShop = () => {
                         <h5>${element.yearOfPublish}</h5>
                     </div>
                     <div class="book_info">
-                        <div><button>Add To Cart  <i class='bx bx-cart-add'></i></button></div>
-                        <div><h4>${element.price}</h4></div>
+                        <button>Add To Cart  <i class='bx bx-cart-add'></i></button>
+                        <h4>${element.price}</h4>
                     </div>
                 </div>
             `);
@@ -583,21 +614,73 @@ const renderShop = () => {
     wrap.appendTo(shop)
 }
 
+const booksCart = [
 
+    {
+        "id": "9781098103828",
+        "img": "https://itbook.store/img/books/9781098103828.png",
+        "nameOfBook": "Snowflake: The Definitive Guide",
+        "rate": 5,
+        "yearOfPublish": "2021",
+        "authorName": "Unknown Author",
+        "price": "$58.90"
+    },
+    {
+        "id": "9781098104030",
+        "img": "https://itbook.store/img/books/9781098104030.png",
+        "nameOfBook": "Python for Data Analysis, 3rd Edition",
+        "rate": 3,
+        "yearOfPublish": "2020",
+        "authorName": "Unknown Author",
+        "price": "$34.96"
+    }];
 
 
 const renderCart = () => {
-     hideEveryThing();
-    
-    }
+    hideEveryThing();
+    cart.removeClass('hidden');
+    booksCart.forEach((element, indx) => {
+        const card = $(`
+                <div class="book_card aos-item"  data-aos="fade-up"
+             data-aos-duration="1200" data-id=${indx + 1}>
+                    <img class="mods"  src="${element.img}" alt="${element.nameOfBook}" />
+                    <div class="rating">${'★'.repeat(element.rate)}${'☆'.repeat(5 - element.rate)}</div>
+                    <div id="book_name" >
+                        <h5>${element.nameOfBook}</h5>
+                    </div>
+                    <div class="book_info">
+                    <h5>${element.authorName}</h5>
+                        <h5>${element.yearOfPublish}</h5>
+                    </div>
+                    <div class="book_info">
+                        <button>Add To Cart  <i class='bx bx-cart-add'></i></button>
+                        <h4>${element.price}</h4>
+                    </div>
+                </div>
+            `);
+        card.appendTo(wrap);
+    });
 
+    wrap.appendTo(cart)
+}
+
+const initLocalStorage = () => {
+    const users = localStorage.getItem('users')
+    if (!users) {
+        localStorage.setItem('users', JSON.stringify([]))
+    }
+}
+initLocalStorage()
 renderHome();
 const activate_search = () => {
-    
+
 }
 
 
-$('#Shop-nav').on('click', () => {
+$('#shop-nav').on('click', () => {
     renderShop();
+});
+$('#cart-nav').on('click', () => {
+    renderCart();
 });
 
