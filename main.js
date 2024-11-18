@@ -96,7 +96,7 @@ const renderLogin = (mn_ween_jay) => {
         <p class="toggle-message">Don't have an account? <span type='button' id="switch_signup" class='toggle-form-btns'>Sign Up</span></p>`)
 
 
-    const submitButton = $(`<input
+   const submitButton = $(`<input
             title="Submit Login"
             id="sub_login"
             class="sub_signin"
@@ -104,6 +104,15 @@ const renderLogin = (mn_ween_jay) => {
             placeholder="Submit"
           />`)
 
+
+    if (mn_ween_jay === 'signup') {
+        register.appendTo(signForm)
+        submitButton.appendTo(signForm);
+    }
+    else {
+        login_card.appendTo(signForm);
+        submitButton.appendTo(signForm);
+    }
 
     if (mn_ween_jay === 'signup') {
         register.appendTo(signForm)
