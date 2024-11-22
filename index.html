@@ -19,6 +19,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
   </head>
   <body>
    
@@ -29,11 +30,15 @@
         <div id="filtration" class="f_box">
           <button id="newest">Newest</button>
           <button id="popular">Popular</button>
-          <select id="category" value="*">
-            <option value="*">Select</option>
-            <option value="documentary">documentary</option>
+          <select id="categorySelector" >
+            <option value="*">select</option>
             <option value="drama">drama</option>
-          </select>
+            <option value="documentary">documentary</option>
+            <option value="AI">AI</option>
+            <option value="theory">theory</option>
+            <option value="programming">programming</option>
+            </select>
+          <input type="text" name="bookSearch" id="bookSearch" placeholder="Search for a book" >
         </div>
       </div>
       <div id="user" class="slide hidden">
