@@ -9,7 +9,7 @@ const toggleLoggedIn = () => {
 
 
 
-// jQuery Element Selections for Page Components and UI Elements
+
 
 const root = $('#root');
 const home = $('#home');
@@ -200,7 +200,7 @@ signForm.on('submit', (e) => {
 
         }
     } else {
-        // TODO login handle
+        
         const userData = users.find((user) => user.userName.toLowerCase() === loginUserName.toLowerCase());
         if (userData) {
             if (userData.password === loginPassword) {
@@ -1052,7 +1052,7 @@ const renderCart = () => {
 
 };
 
-// TODO: handle remove btn
+
 $(document).on('click', '.removeFromCartBtn', (e) => {
     const bookId = e.target.id; 
     const userID = JSON.parse(localStorage.getItem('user')).id
@@ -1065,15 +1065,8 @@ $(document).on('click', '.removeFromCartBtn', (e) => {
 })
 
 
-//-------------
 
 
-
-
-
-
-
-// ----------
 const initLocalStorage = () => {
     const users = localStorage.getItem('users')
     if (!users) {
@@ -1084,8 +1077,7 @@ const initLocalStorage = () => {
         localStorage.setItem('cart', JSON.stringify([]))
     }
 }
-initLocalStorage();
-renderHome();
+
 
 
 
@@ -1107,7 +1099,8 @@ $('#cart-nav').on('click', () => {
     
 });
 
-
+initLocalStorage();
+renderHome();
 
 $(document).on('mouseenter', '#user-nav', () => {
     $('#user-list').stop(true, true).fadeIn();
