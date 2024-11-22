@@ -1,9 +1,3 @@
-// TODO : activate nav(just define user list) 
-//  TODO : activate search on home page
-//  TODO : login handle 
-// TODO : cart logic
-//  TODO : activate shop filters
-// TODO : responsive design /and make sure to fix the design abnormality/
 
 
 
@@ -91,6 +85,7 @@ const renderLogin = (mn_ween_jay) => {
             class="input_box"
             type="text"
             placeholder="lastName"
+            
             required
             />
 
@@ -109,7 +104,9 @@ const renderLogin = (mn_ween_jay) => {
             type="password"
             placeholder="Password"
             required
+            required
           />
+           <p class="toggle-message">Already have an account?<span type='button' id="switch_login" class='toggle-form-btns'>Login</span> </p>
            <p class="toggle-message">Already have an account?<span type='button' id="switch_login" class='toggle-form-btns'>Login</span> </p>
         `)
     const login_card = $(` 
@@ -128,6 +125,7 @@ const renderLogin = (mn_ween_jay) => {
             class="input_box"
             type="password"
             placeholder="Password"
+            required
             required
           />
         <p class="toggle-message">Don't have an account? <span type='button' id="switch_signup" class='toggle-form-btns'>Sign Up</span></p>`)

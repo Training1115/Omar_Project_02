@@ -98,6 +98,12 @@ header {
   text-decoration: underline;
 }
 
+.toggle-form-btns{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
 #menu {
   display: flex;
   gap: 30px;
