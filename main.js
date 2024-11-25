@@ -10,7 +10,7 @@ const toggleLoggedIn = () => {
 
 
 
-
+// implmentation
 const root = $('#root');
 const home = $('#home');
 const nav = $('#nav');
@@ -25,6 +25,8 @@ const search = $('#search');
 const shopSearch = $('#bookSearch');
 const select = $('#categorySelector');
 const paymentFooter = $('#paymentFooter');
+
+// function that hide pages
 const hideEveryThing = () => {
     home.addClass('hidden');
     shop.addClass('hidden');
@@ -33,6 +35,9 @@ const hideEveryThing = () => {
 }
 
 
+
+
+// the list of element in user list
 
 const liElement = () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn')
@@ -55,6 +60,7 @@ const liElement_toggle = () => {
 
 
 
+// nave bar structure
 
 const navBar = $(
     `   <div id="nav-bar">
@@ -92,6 +98,9 @@ const navBar = $(
 
 
 );
+
+//listeners of nav-bar menu on-change and on-click
+
 $(document).on('change', '#toggle-menu', (e) => {
     const val = e.target.value;
     console.log('val :>> ', val);
@@ -113,7 +122,32 @@ $(document).on('change', '#toggle-menu', (e) => {
         renderHome()
     }
 })
+
+$('#shop-nav').on('click', () => {
+    renderShop();
+});
+$('#cart-nav').on('click', () => {
+    renderCart();
+
+});
+$(document).on('mouseenter', '#user-nav', () => {
+    $('#user-list').stop(true, true).fadeIn();
+});
+
+$(document).on('mouseleave', '#user-nav', () => {
+    $('#user-list').stop(true, true).fadeOut();
+});
+$(document).on('click', '#main-nav', () => {
+    renderHome();
+});
+$(document).on('click', '#logo', () => {
+    location.reload();
+});
+
 navBar.appendTo(header);
+
+
+// render of login page
 
 
 const renderLogin = (fromWhere) => {
@@ -203,7 +237,7 @@ const renderLogin = (fromWhere) => {
 
 }
 
-
+// listeners of switches between login and register
 
 $(document).on('click', '#switch_login', function () {
     renderLogin()
@@ -213,6 +247,10 @@ $(document).on('click', '#switch_signup', function () {
 });
 $(document).on('click', '#sub_login', function () {
 });
+
+
+// functionality of register and login submition and store in local storage
+
 $(document).on('change', '#userName_S', function () {
     const users = JSON.parse(localStorage.getItem('users'));
     const registerUserName = $('#userName_S').val();
@@ -275,7 +313,7 @@ signForm.on('submit', (e) => {
 
 
 
-
+// render of home page
 
 const renderHome = () => {
     home.empty()
@@ -324,21 +362,13 @@ const renderHome = () => {
         renderShop()
     })
 
-    // const down = $(`
-    //     <div class="scroll-down"  aos-item"  data-aos="fade-down"
-    //          data-aos-duration="1500"
-    //     <p id="scroll-down"><i class='bx bxs-chevrons-down'></i></p></div>`);
-    // down.appendTo(home);
 
-    // $(document).on("scroll", (e) => {
-    //     e.preventDefault()
-    //     renderShop()
-    // });
 }
 
 
 
 
+// footer of pages
 
 const footer = $(`<footer id="footer"><img src="img/logo/Book1.jpg" alt="" width="140px" height="55px" ></footer>`
 );
@@ -347,6 +377,7 @@ footer.appendTo(root);
 
 
 
+// books data
 
 const books = [
 
@@ -939,8 +970,13 @@ const books = [
 
 
 ]
-let filtration = []
 
+
+
+
+// handle filtration to know what to send to render shop
+
+let filtration = []
 const handleFiltration = (whatToFilter) => {
 
     switch (whatToFilter) {
@@ -996,6 +1032,9 @@ const handleFiltration = (whatToFilter) => {
     }
 
 }
+
+// listener of filtration button
+
 $(document).on('click', '#newest', () => {
     handleFiltration('newest');
 });
@@ -1013,7 +1052,7 @@ $(document).on('change', '#categorySelector', (e) => {
 
 
 
-
+// render of shop page
 
 const renderShop = (filtration = books) => {
     $(document).off("scroll");
@@ -1043,17 +1082,19 @@ const renderShop = (filtration = books) => {
     });
 
 
-    filtration
-        .filter((item) => {
-            if (shopSearch.val().length === 0) {
-                return true;
-            } else {
-                return item.nameOfBook
-                    .toLowerCase()
-                    .includes(shopSearch.val().toLowerCase());
-            }
-        })
+    filtration.filter((item) => {
+        if (shopSearch.val().length === 0) {
+            return true;
+        } else {
+            return item.nameOfBook
+                .toLowerCase()
+                .includes(shopSearch.val().toLowerCase());
+        }
+    })
         .forEach((element, indx) => {
+
+            // structure of card of book
+
             const card = $(`
                 <div class="book_card aos-item" data-aos="fade-up"
                      data-aos-duration="1000" data-id=${indx + 1}>
@@ -1096,24 +1137,15 @@ const renderShop = (filtration = books) => {
 };
 
 
-// ---------
+
 shopSearch.on('input', () => {
 
     renderShop()
 });
 
 
-// $(window).on('load', function () {
-//     $(window).scrollTop(0);
-// });
 
-// $(window).on('beforeunload', function () {
-//     $(window).scrollTop(0);
-// });
-
-
-
-
+// listener of add to cart button
 
 $(document).on('click', '.addToCartBtn', (e) => {
     const isLoggedIn = localStorage.getItem('isLoggedIn')
@@ -1140,12 +1172,17 @@ $(document).on('click', '.addToCartBtn', (e) => {
     }
 });
 
+// listener of signout button
+
 $(document).on('click', '#signout', (e) => {
     localStorage.setItem('isLoggedIn', 0)
     localStorage.removeItem('user')
     toggleLoggedIn()
 
 });
+
+// render of cart page
+
 const renderCart = () => {
     let totalCartPrice = 0
     paymentFooter.empty()
@@ -1203,7 +1240,7 @@ const renderCart = () => {
         $(document).on('click', '#checkoutBtn', () => {
             basket.book_ids = [];
             localStorage.setItem('cart', JSON.stringify(carts));
-            alert('enta df3t ya watee')
+            alert('thank you for your purchase payment successful your book/s will arrive soon')
             window.location.reload();
         })
 
@@ -1220,6 +1257,7 @@ const renderCart = () => {
 
 };
 
+// listener of remove from cart button
 
 $(document).on('click', '.removeFromCartBtn', (e) => {
     const bookId = e.target.id;
@@ -1233,7 +1271,7 @@ $(document).on('click', '.removeFromCartBtn', (e) => {
 })
 
 
-
+// initialization of local storage
 
 const initLocalStorage = () => {
     const users = localStorage.getItem('users')
@@ -1247,40 +1285,19 @@ const initLocalStorage = () => {
 }
 
 
-
+// from home search to shop 
 
 $(document).on('click', '#submit_search', (e) => {
     e.preventDefault()
     $()
-    console.log("first")
     renderShop()
 })
 
 
-
-
-$('#shop-nav').on('click', () => {
-    renderShop();
-});
-$('#cart-nav').on('click', () => {
-    renderCart();
-
-});
+// invoke on load for home and storage
 
 initLocalStorage();
 renderHome();
 
-$(document).on('mouseenter', '#user-nav', () => {
-    $('#user-list').stop(true, true).fadeIn();
-});
 
-$(document).on('mouseleave', '#user-nav', () => {
-    $('#user-list').stop(true, true).fadeOut();
-});
-$(document).on('click', '#main-nav', () => {
-    renderHome();
-});
-$(document).on('click', '#logo', () => {
-    location.reload();
-});
 
