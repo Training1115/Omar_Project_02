@@ -99,51 +99,6 @@ const navBar = $(
 
 );
 
-//listeners of nav-bar menu on-change and on-click
-
-$(document).on('change', '#toggle-menu', (e) => {
-    const val = e.target.value;
-    console.log('val :>> ', val);
-    if (val === 'Cart') {
-        renderCart()
-    }
-    else if (val === 'Shop') {
-        renderShop()
-    }
-    else if (val === 'logout') {
-        localStorage.setItem('isLoggedIn', 0)
-        localStorage.removeItem('user')
-        toggleLoggedIn()
-    }
-    else if (val === 'login') {
-        renderLogin('login')
-    }
-    else if (val === 'Main') {
-        renderHome()
-    }
-})
-
-$('#shop-nav').on('click', () => {
-    renderShop();
-});
-$('#cart-nav').on('click', () => {
-    renderCart();
-
-});
-$(document).on('mouseenter', '#user-nav', () => {
-    $('#user-list').stop(true, true).fadeIn();
-});
-
-$(document).on('mouseleave', '#user-nav', () => {
-    $('#user-list').stop(true, true).fadeOut();
-});
-$(document).on('click', '#main-nav', () => {
-    renderHome();
-});
-$(document).on('click', '#logo', () => {
-    location.reload();
-});
-
 navBar.appendTo(header);
 
 
@@ -1293,6 +1248,53 @@ $(document).on('click', '#submit_search', (e) => {
     renderShop()
 })
 
+
+
+//listeners of nav-bar menu on-change and on-click
+
+$(document).on('change', '#toggle-menu', (e) => {
+    const val = e.target.value;
+    console.log('val :>> ', val);
+    if (val === 'Cart') {
+        renderCart()
+    }
+    else if (val === 'Shop') {
+        renderShop()
+    }
+    else if (val === 'logout') {
+        localStorage.setItem('isLoggedIn', 0)
+        localStorage.removeItem('user')
+        toggleLoggedIn()
+    }
+    else if (val === 'login') {
+        renderLogin('login')
+    }
+    else if (val === 'Main') {
+        renderHome()
+    }
+})
+
+
+$(document).on('mouseenter', '#user-nav', () => {
+    $('#user-list').stop(true, true).fadeIn();
+});
+
+$(document).on('mouseleave', '#user-nav', () => {
+    $('#user-list').stop(true, true).fadeOut();
+});
+$(document).on('click', '#main-nav', () => {
+    renderHome();
+});
+$(document).on('click', '#logo', () => {
+    location.reload();
+});
+$('#shop-nav').on('click', () => {
+    renderShop();
+});
+$('#cart-nav').on('click', () => {
+    renderCart();
+
+});
 
 // invoke on load for home and storage
 
