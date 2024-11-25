@@ -24,6 +24,7 @@ const signForm = $('#signForm');
 const search = $('#search');
 const shopSearch = $('#bookSearch');
 const select = $('#categorySelector');
+const paymentFooter = $('#paymentFooter');
 const hideEveryThing = () => {
     home.addClass('hidden');
     shop.addClass('hidden');
@@ -43,28 +44,79 @@ const liElement = () => {
     }
     else { return `<li id="login1st">Login</li>` }
 };
+const liElement_toggle = () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn')
+    const user = JSON.parse(localStorage.getItem('user'))
+    if (isLoggedIn != 0 && user) {
+        return `<option id="signout" value='logout'>Logout</option>`
+    }
+    else { return `<option id="login1st" value='login'>Login</option>` }
+};
 
 
 
 
 const navBar = $(
-    `<div id="nav-bar">
-    <div id="logo"><img src="img/logo/Book1.jpg" alt=""  width="140px" height="55px"></div>  
-   <ul id="menu">
-        <li id="main-nav" class="nav-link"><i title='Main' class='bx bx-home-smile'> Main</i></li>
-        <li id="shop-nav" class="nav-link"><i title='Shop' class='bx bx-category'> Shop</i></li>
-        <li id="cart-nav" class="nav-link"><i title='Cart' class='bx bx-library'>Cart</i></li> 
-        <li id="user-nav" class="nav-link"><i title='User  ' class='bx bx-user'> User</i>
-        <ul id="user-list" style="display: none;">
-        ${liElement()}
-    </ul></li> 
-        </ul> </div>`
+    `   <div id="nav-bar">
+      <div id="logo">
+        <img src="img/logo/Book1.jpg" alt="" width="140px" height="55px" />
+      </div>
+
+      <div id="menu_navBar">
+        <ul id="menu">
+          <li id="main-nav" class="nav-link">
+            <i title="Main" class="bx bx-home-smile"> Main</i>
+          </li>
+          <li id="shop-nav" class="nav-link">
+            <i title="Shop" class="bx bx-category"> Shop</i>
+          </li>
+          <li id="cart-nav"><i class='bx bx-cart' > Cart</i></li>
+          <li id="user-nav" class="nav-link">
+            <i title="User  " class="bx bx-user"> User</i>
+            <ul id="user-list" style="display: none">
+              ${liElement()}
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div id="nav-bar-toggle" >
+        <select id="toggle-menu">
+          <option id="main-nav" class="nav-link"><i value="main" class="bx bx-home-smile"> Main</i></option>
+          <option id="shop-nav" class="nav-link"><i value="shop" class="bx bx-category"> Shop</i></option>
+          <option id="cart-nav" class="nav-link"><i value="cart" class="bx bx-library">Cart</i></option>
+          ${liElement_toggle()}
+        </select>
+      </div>
+    </div>
+       `
 
 
 );
+$(document).on('change', '#toggle-menu', (e) => {
+    const val = e.target.value;
+    console.log('val :>> ', val);
+    if (val === 'Cart') {
+        renderCart()
+    }
+    else if (val === 'Shop') {
+        renderShop()
+    }
+    else if (val === 'logout') {
+        localStorage.setItem('isLoggedIn', 0)
+        localStorage.removeItem('user')
+        toggleLoggedIn()
+    }
+    else if (val === 'login') {
+        renderLogin('login')
+    }
+    else if (val === 'Main') {
+        renderHome()
+    }
+})
 navBar.appendTo(header);
 
-const renderLogin = (mn_ween_jay) => {
+
+const renderLogin = (fromWhere) => {
     hideEveryThing();
     user.removeClass('hidden');
     signForm.empty()
@@ -107,7 +159,6 @@ const renderLogin = (mn_ween_jay) => {
             required
           />
            <p class="toggle-message">Already have an account?<span type='button' id="switch_login" class='toggle-form-btns'>Login</span> </p>
-           <p class="toggle-message">Already have an account?<span type='button' id="switch_login" class='toggle-form-btns'>Login</span> </p>
         `)
     const login_card = $(` 
         <p class="title">login</p>
@@ -140,7 +191,7 @@ const renderLogin = (mn_ween_jay) => {
           />`)
 
 
-    if (mn_ween_jay === 'signup') {
+    if (fromWhere === 'signup') {
         register.appendTo(signForm)
         submitButton.appendTo(signForm);
     }
@@ -200,7 +251,7 @@ signForm.on('submit', (e) => {
 
         }
     } else {
-        
+
         const userData = users.find((user) => user.userName.toLowerCase() === loginUserName.toLowerCase());
         if (userData) {
             if (userData.password === loginPassword) {
@@ -273,16 +324,16 @@ const renderHome = () => {
         renderShop()
     })
 
-    const down = $(`
-        <div class="scroll-down"  aos-item"  data-aos="fade-down"
-             data-aos-duration="1500"
-        <p id="scroll-down"><i class='bx bxs-chevrons-down'></i></p></div>`);
-    down.appendTo(home);
+    // const down = $(`
+    //     <div class="scroll-down"  aos-item"  data-aos="fade-down"
+    //          data-aos-duration="1500"
+    //     <p id="scroll-down"><i class='bx bxs-chevrons-down'></i></p></div>`);
+    // down.appendTo(home);
 
-    $(document).on("scroll", (e) => {
-        e.preventDefault()
-        renderShop()
-    });
+    // $(document).on("scroll", (e) => {
+    //     e.preventDefault()
+    //     renderShop()
+    // });
 }
 
 
@@ -294,17 +345,21 @@ const footer = $(`<footer id="footer"><img src="img/logo/Book1.jpg" alt="" width
 footer.appendTo(root);
 
 
+
+
+
 const books = [
 
     {
-        "id": "9781098103828",
+        "id": "97810981038284",
         "img": "https://itbook.store/img/books/9781098103828.png",
         "nameOfBook": "Snowflake: The Definitive Guide",
         "rate": 2,
         "yearOfPublish": "2017",
         "authorName": "Unknown Author",
         "price": "$58.90",
-        "category": "programming"
+        "category": "programming",
+        "description": "Comprehensive guide to Snowflake’s cloud data platform, covering data integration, architecture, and best practices for managing data at scale in a cloud environment."
     },
     {
         "id": "9781098104030",
@@ -314,26 +369,29 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$34.96",
-        "category": "programming"
+        "category": "programming",
+        "description": "Learn how to use Python for data wrangling, exploration, and visualization, with updated examples for analysis and manipulation of data using pandas and other libraries."
     }, {
-        "id": "9781098106225",
+        "id": "97810981062253",
         "img": "https://itbook.store/img/books/9781098106225.png",
         "nameOfBook": "Reliable Machine Learning",
         "rate": 1,
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$43.99",
-        "category": "programming"
+        "category": "programming",
+        "description": "Explore the principles and practices for building reliable machine learning systems, covering validation, monitoring, and handling data drift to ensure sustainable performance."
     },
     {
-        "id": "9781098111878",
+        "id": "97810981118784",
         "img": "https://itbook.store/img/books/9781098111878.png",
         "nameOfBook": "Data Visualization with Python and JavaScript, 2nd Edition",
         "rate": 1,
         "yearOfPublish": "2005",
         "authorName": "Unknown Author",
         "price": "$60.99",
-        "category": "programming"
+        "category": "programming",
+        "description": "Learn to create interactive, web-based visualizations using Python’s data libraries and JavaScript, exploring tools like Plotly, D3.js, and other modern frameworks."
     },
     {
         "id": "9781098112844",
@@ -343,27 +401,30 @@ const books = [
         "yearOfPublish": "2029",
         "authorName": "Unknown Author",
         "price": "$40.97",
-        "category": "programming"
+        "category": "programming",
+        "description": "A guide to mastering Power BI for business analytics, covering data models, visualizations, and report generation to extract insights and drive decision-making."
     },
     {
-        "id": "9781098113162",
+        "id": "97810981131621",
         "img": "https://itbook.store/img/books/9781098113162.png",
         "nameOfBook": "C++ Software Design",
         "rate": 3,
         "yearOfPublish": "2014",
         "authorName": "Unknown Author",
         "price": "$48.99",
-        "category": "theory"
+        "category": "theory",
+        "description": "Focuses on designing software with C++, covering principles such as object-oriented design, testing, and using libraries to create maintainable and efficient applications."
     },
     {
-        "id": "9781098116743",
+        "id": "97810981167434",
         "img": "https://itbook.store/img/books/9781098116743.png",
         "nameOfBook": "Terraform: Up and Running, 3rd Edition",
         "rate": 4,
         "yearOfPublish": "2024",
         "authorName": "Unknown Author",
         "price": "$41.99",
-        "category": "theory"
+        "category": "theory",
+        "description": "Learn how to manage infrastructure as code with Terraform, covering automation, provisioning, and scaling cloud resources in a flexible and repeatable manner."
     },
     {
         "id": "9781098119515",
@@ -373,7 +434,8 @@ const books = [
         "yearOfPublish": "2023",
         "authorName": "Unknown Author",
         "price": "$42.99",
-        "category": "theory"
+        "category": "theory",
+        "description": "A hands-on guide to developing mobile apps using Flutter and Dart, with practical recipes to address common problems and optimize app performance."
     },
     {
         "id": "9781098121228",
@@ -383,7 +445,8 @@ const books = [
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$56.99",
-        "category": "theory"
+        "category": "theory",
+        "description": "A reference for Python’s data science libraries, including NumPy, pandas, Matplotlib, and Scikit-learn, with examples for data manipulation and machine learning tasks."
     },
     {
         "id": "9781098130923",
@@ -393,7 +456,8 @@ const books = [
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$14.99",
-        "category": "theory"
+        "category": "theory",
+        "description": "Practical guide for creating innovative projects with Raspberry Pi, from basic setups to advanced applications like home automation, robotics, and media centers."
     },
     {
         "id": "9781642002263",
@@ -403,7 +467,8 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$0.00",
-        "category": "AI"
+        "category": "AI",
+        "description": "Learn how to integrate Azure Maps with Blazor applications for location-based data visualization and mapping solutions, making use of real-time geospatial data."
     },
     {
         "id": "9781800562738",
@@ -413,7 +478,8 @@ const books = [
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$39.99",
-        "category": "AI"
+        "category": "AI",
+        "description": "A comprehensive guide to building full-stack applications using Quarkus for backend and React for frontend, providing practical solutions for web development."
     },
     {
         "id": "9781801077330",
@@ -423,17 +489,18 @@ const books = [
         "yearOfPublish": "1998",
         "authorName": "Unknown Author",
         "price": "$49.99",
-        "category": "AI"
+        "category": "AI",
+        "description": "Understand essential math concepts for game development and graphics programming, including linear algebra, geometry, and calculus, to build efficient and realistic simulations."
     },
     {
-        "id": "9781801810999",
+        "id": "97818018109996",
         "img": "https://itbook.store/img/books/9781801810999.png",
         "nameOfBook": "Architecting and Building High-Speed SoCs",
         "rate": 3,
         "yearOfPublish": "2010",
         "authorName": "Unknown Author",
         "price": "$35.99",
-        "category": "AI"
+        "category": "AI", "description": "Dive into system-on-chip (SoC) design, focusing on the architecture and strategies required to build high-performance, scalable, and efficient hardware for complex applications."
     },
     {
         "id": "9781801811132",
@@ -443,17 +510,19 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$39.99",
-        "category": "AI"
+        "category": "AI",
+        "description": "Learn web development with Julia and the Genie framework, combining high-performance computational capabilities with modern web application development practices and tools."
     },
     {
-        "id": "9781801812856",
+        "id": "97818018128560",
         "img": "https://itbook.store/img/books/9781801812856.png",
         "nameOfBook": "Java Memory Management",
         "rate": 5,
         "yearOfPublish": "2016",
         "authorName": "Unknown Author",
         "price": "$34.99",
-        "category": "AI"
+        "category": "AI",
+        "description": "A detailed guide to managing memory in Java applications, covering garbage collection, heap management, and performance optimization techniques for large-scale applications."
     },
     {
         "id": "9781803242002",
@@ -463,7 +532,8 @@ const books = [
         "yearOfPublish": "2023",
         "authorName": "Unknown Author",
         "price": "$44.99",
-        "category": "drama"
+        "category": "drama",
+        "description": "Master test-driven development (TDD) with C++, focusing on writing clean, maintainable code with unit tests, debugging, and ensuring software reliability through continuous testing."
     },
     {
         "id": "9781804612569",
@@ -473,48 +543,53 @@ const books = [
         "yearOfPublish": "2024",
         "authorName": "Unknown Author",
         "price": "$44.99",
-        "category": "drama"
+        "category": "drama",
+        "description": "Explore best practices for designing effective software tests, including test case development, test-driven design, and methodologies for validating complex systems and ensuring quality."
     },
     {
-        "id": "9781804617007",
+        "id": "97818046170071",
         "img": "https://itbook.store/img/books/9781804617007.png",
         "nameOfBook": "Microservices with Go",
         "rate": 5,
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$29.99",
-        "category": "drama"
+        "category": "drama",
+        "description": "A practical guide to developing microservices architectures using Go, including the design, implementation, and deployment of scalable, distributed systems for modern cloud environments."
     },
 
     {
-        "id": "9781098103828",
+        "id": "97810981038285",
         "img": "https://itbook.store/img/books/9781098103828.png",
         "nameOfBook": "Snowflake: The Definitive Guide",
         "rate": 5,
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$58.90",
-        "category": "drama"
+        "category": "drama",
+        "description": "A collection of best practices and design principles for writing robust, efficient, and maintainable Java code, including tips on concurrency, performance, and security."
     },
     {
-        "id": "9781098104030",
+        "id": "97810981040304",
         "img": "https://itbook.store/img/books/9781098104030.png",
         "nameOfBook": "Python for Data Analysis, 3rd Edition",
         "rate": 3,
         "yearOfPublish": "2020",
         "authorName": "Unknown Author",
         "price": "$34.96",
-        "category": "drama"
+        "category": "drama",
+        "description": "A comprehensive guide to Python programming for beginners and experienced developers alike, covering syntax, data structures, libraries, and advanced concepts like decorators and generators."
     },
     {
-        "id": "9781098106225",
+        "id": "97810981062258",
         "img": "https://itbook.store/img/books/9781098106225.png",
         "nameOfBook": "Reliable Machine Learning",
         "rate": 4,
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$43.99",
-        "category": "drama"
+        "category": "drama",
+        "description": "A fast-paced, hands-on introduction to Python programming, teaching foundational concepts and practical projects to build real-world applications and enhance programming skills."
     },
     {
         "id": "9781098111878",
@@ -524,17 +599,19 @@ const books = [
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$60.99",
-        "category": "drama"
+        "category": "drama",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
-        "id": "9781098112844",
+        "id": "97810981128448",
         "img": "https://itbook.store/img/books/9781098112844.png",
         "nameOfBook": "Learning Microsoft Power BI",
         "rate": 4,
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$40.97",
-        "category": "drama"
+        "category": "drama",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
         "id": "9781098113162",
@@ -544,27 +621,30 @@ const books = [
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$48.99",
-        "category": "programming"
+        "category": "programming",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
-        "id": "9781098116743",
+        "id": "97810981167430",
         "img": "https://itbook.store/img/books/9781098116743.png",
         "nameOfBook": "Terraform: Up and Running, 3rd Edition",
         "rate": 4,
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$41.99",
-        "category": "drama"
+        "category": "drama",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
-        "id": "9781098119515",
+        "id": "97810981195150",
         "img": "https://itbook.store/img/books/9781098119515.png",
         "nameOfBook": "Flutter and Dart Cookbook",
         "rate": 5,
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$42.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
         "id": "9781098121228",
@@ -574,7 +654,8 @@ const books = [
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$56.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
         "id": "9781098130923",
@@ -584,7 +665,8 @@ const books = [
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$14.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
         "id": "9781642002263",
@@ -594,37 +676,41 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$0.00",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
-        "id": "9781800562738",
+        "id": "97818005627380",
         "img": "https://itbook.store/img/books/9781800562738.png",
         "nameOfBook": "Full Stack Quarkus and React",
         "rate": 5,
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$39.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
-        "id": "9781801077330",
+        "id": "97818010773304",
         "img": "https://itbook.store/img/books/9781801077330.png",
         "nameOfBook": "Mathematics for Game Programming and Computer Graphics",
         "rate": 4,
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$49.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "In-depth guide to Java memory management, focusing on garbage collection, heap management, and optimizations for high-performance applications."
     },
     {
-        "id": "9781801810999",
+        "id": "97818018109991",
         "img": "https://itbook.store/img/books/9781801810999.png",
         "nameOfBook": "Architecting and Building High-Speed SoCs",
         "rate": 3,
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$35.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "In-depth guide to Java memory management, focusing on garbage collection, heap management, and optimizations for high-performance applications."
     },
     {
         "id": "9781801811132",
@@ -634,7 +720,8 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$39.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "In-depth guide to Java memory management, focusing on garbage collection, heap management, and optimizations for high-performance applications."
     },
     {
         "id": "9781801812856",
@@ -644,7 +731,8 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$34.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "In-depth guide to Java memory management, focusing on garbage collection, heap management, and optimizations for high-performance applications."
     },
     {
         "id": "9781803242002",
@@ -654,7 +742,8 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$44.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Best practices for software test design, including the creation of test cases, test plans, and ensuring the quality of complex software systems."
     },
     {
         "id": "9781804612569",
@@ -664,7 +753,8 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$44.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Best practices for software test design, including the creation of test cases, test plans, and ensuring the quality of complex software systems."
     },
     {
         "id": "9781804617007",
@@ -674,7 +764,8 @@ const books = [
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$29.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Best practices for software test design, including the creation of test cases, test plans, and ensuring the quality of complex software systems."
     },
 
     {
@@ -685,37 +776,41 @@ const books = [
         "yearOfPublish": "2017",
         "authorName": "Unknown Author",
         "price": "$58.90",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Best practices for software test design, including the creation of test cases, test plans, and ensuring the quality of complex software systems."
     },
     {
-        "id": "9781098104030",
+        "id": "97810981040307",
         "img": "https://itbook.store/img/books/9781098104030.png",
         "nameOfBook": "Python for Data Analysis, 3rd Edition",
         "rate": 2,
         "yearOfPublish": "2022",
         "authorName": "Unknown Author",
         "price": "$34.96",
-        "category": "drama"
+        "category": "drama",
+        "description": "Best practices for software test design, including the creation of test cases, test plans, and ensuring the quality of complex software systems."
     },
     {
-        "id": "9781098106225",
+        "id": "97810981062251",
         "img": "https://itbook.store/img/books/9781098106225.png",
         "nameOfBook": "Reliable Machine Learning",
         "rate": 1,
         "yearOfPublish": "2021",
         "authorName": "Unknown Author",
         "price": "$43.99",
-        "category": "documentary"
+        "category": "documentary",
+        "description": "Build scalable microservices with Go, using tools and best practices for designing, deploying, and managing distributed systems."
     },
     {
-        "id": "9781098111878",
+        "id": "97810981118789",
         "img": "https://itbook.store/img/books/9781098111878.png",
         "nameOfBook": "Data Visualization with Python and JavaScript, 2nd Edition",
         "rate": 1,
         "yearOfPublish": "2005",
         "authorName": "Unknown Author",
         "price": "$60.99",
-        "category": "drama"
+        "category": "drama",
+        "description": "Build scalable microservices with Go, using tools and best practices for designing, deploying, and managing distributed systems."
     },
     {
         "id": "9780134685991",
@@ -725,7 +820,8 @@ const books = [
         "yearOfPublish": "2018",
         "authorName": "Joshua Bloch",
         "price": "$45.00",
-        "category": "programming"
+        "category": "programming",
+        "description": "Build scalable microservices with Go, using tools and best practices for designing, deploying, and managing distributed systems."
     },
     {
         "id": "9781491950357",
@@ -735,7 +831,8 @@ const books = [
         "yearOfPublish": "2013",
         "authorName": "Mark Lutz",
         "price": "$59.95",
-        "category": "programming"
+        "category": "programming",
+        "description": "Build scalable microservices with Go, using tools and best practices for designing, deploying, and managing distributed systems."
     },
     {
         "id": "9781492078005",
@@ -745,17 +842,19 @@ const books = [
         "yearOfPublish": "2019",
         "authorName": "Eric Matthes",
         "price": "$39.95",
-        "category": "programming"
+        "category": "programming",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
-        "id": "9781491954461",
+        "id": "97814919544612",
         "img": "https://itbook.store/img/books/9781491954461.png",
         "nameOfBook": "Fluent Python",
         "rate": 5,
         "yearOfPublish": "2015",
         "authorName": "Luciano Ramalho",
         "price": "$49.99",
-        "category": "programming"
+        "category": "programming",
+        "description": "Dive deep into Python’s advanced features, exploring idiomatic programming techniques, data structures, concurrency, and functional programming to write efficient and elegant Python code."
     },
     {
         "id": "9780134853987",
@@ -765,7 +864,43 @@ const books = [
         "yearOfPublish": "2019",
         "authorName": "Michael Sipser",
         "price": "$59.99",
-        "category": "theory"
+        "category": "theory",
+        "description": "Explore the foundational principles of computation theory, including automata, formal languages, computational complexity, and Turing machines, essential for understanding algorithms and computing limits."
+    },
+
+    {
+        "id": "97814919502961",
+        "img": "https://itbook.store/img/books/9781491950296.png",
+        "nameOfBook": "The Pragmatic Programmer, 20th Anniversary Edition",
+        "rate": 5,
+        "yearOfPublish": "2019",
+        "authorName": "Andrew Hunt, David Thomas",
+        "price": "$49.99",
+        "category": "programming",
+        "description": "Timeless advice on becoming a better software developer, focusing on code craftsmanship, problem-solving, and agile practices for writing clean, maintainable, and high-quality software."
+    },
+
+    {
+        "id": "9781491954461",
+        "img": "https://itbook.store/img/books/9781491954461.png",
+        "nameOfBook": "Fluent Python",
+        "rate": 5,
+        "yearOfPublish": "2015",
+        "authorName": "Luciano Ramalho",
+        "price": "$49.99",
+        "category": "programming",
+        "description": "Dive deep into Python’s advanced features, exploring idiomatic programming techniques, data structures, concurrency, and functional programming to write efficient and elegant Python code."
+    },
+    {
+        "id": "97801348539875",
+        "img": "https://itbook.store/img/books/9781789951288.png",
+        "nameOfBook": "Introduction to the Theory of Computation",
+        "rate": 4,
+        "yearOfPublish": "2019",
+        "authorName": "Michael Sipser",
+        "price": "$59.99",
+        "category": "theory",
+        "description": "Explore the foundational principles of computation theory, including automata, formal languages, computational complexity, and Turing machines, essential for understanding algorithms and computing limits."
     },
 
     {
@@ -776,39 +911,8 @@ const books = [
         "yearOfPublish": "2019",
         "authorName": "Andrew Hunt, David Thomas",
         "price": "$49.99",
-        "category": "programming"
-    },
-
-    {
-        "id": "9781491954461",
-        "img": "https://itbook.store/img/books/9781491954461.png",
-        "nameOfBook": "Fluent Python",
-        "rate": 5,
-        "yearOfPublish": "2015",
-        "authorName": "Luciano Ramalho",
-        "price": "$49.99",
-        "category": "programming"
-    },
-    {
-        "id": "9780134853987",
-        "img": "https://itbook.store/img/books/9781789951288.png",
-        "nameOfBook": "Introduction to the Theory of Computation",
-        "rate": 4,
-        "yearOfPublish": "2019",
-        "authorName": "Michael Sipser",
-        "price": "$59.99",
-        "category": "theory"
-    },
-
-    {
-        "id": "9781491950296",
-        "img": "https://itbook.store/img/books/9781491950296.png",
-        "nameOfBook": "The Pragmatic Programmer, 20th Anniversary Edition",
-        "rate": 5,
-        "yearOfPublish": "2019",
-        "authorName": "Andrew Hunt, David Thomas",
-        "price": "$49.99",
-        "category": "programming"
+        "category": "programming",
+        "description": "Timeless advice on becoming a better software developer, focusing on code craftsmanship, problem-solving, and agile practices for writing clean, maintainable, and high-quality software."
     },
     {
         "id": "9780134757590",
@@ -818,17 +922,19 @@ const books = [
         "yearOfPublish": "2020",
         "authorName": "Stuart Russell, Peter Norvig",
         "price": "$79.99",
-        "category": "AI"
+        "category": "AI",
+        "description": "Learn web development with the Julia language and the Genie framework for high-performance backend services and data-driven applications."
     },
     {
-        "id": "9781491950296",
+        "id": "97814919502968",
         "img": "https://itbook.store/img/books/9781491950296.png",
         "nameOfBook": "The Pragmatic Programmer, 20th Anniversary Edition",
         "rate": 5,
         "yearOfPublish": "2019",
         "authorName": "Andrew Hunt, David Thomas",
         "price": "$49.99",
-        "category": "programming"
+        "category": "programming",
+        "description": "Timeless advice on becoming a better software developer, focusing on code craftsmanship, problem-solving, and agile practices for writing clean, maintainable, and high-quality software."
     }
 
 
@@ -909,58 +1015,102 @@ $(document).on('change', '#categorySelector', (e) => {
 
 
 
-
 const renderShop = (filtration = books) => {
     $(document).off("scroll");
     hideEveryThing();
-    shop.removeClass('hidden');
-    wrap.empty()
-    filtration.filter((item) => {
-        if (shopSearch.val().length === 0) {
-            return true
+    shop.removeClass("hidden");
+    wrap.empty();
 
+
+    $(document).on("click", ".book_card", function () {
+        const card = $(this);
+        const isFlipped = card.hasClass("flipped");
+
+
+        if (isFlipped) {
+
+            card.find(".back").fadeOut(200, () => {
+                card.removeClass("flipped");
+                card.find(".front").fadeIn(200);
+            });
         } else {
-            return item.nameOfBook.toLowerCase().includes(shopSearch.val().toLowerCase())
+
+            card.find(".front").fadeOut(200, () => {
+                card.addClass("flipped");
+                card.find(".back").fadeIn(200);
+            });
         }
-    }).forEach((element, indx) => {
-        const card = $(`
-                <div class="book_card aos-item"  data-aos="fade-up"
-             data-aos-duration="1200" data-id=${indx + 1}>
-                    <img class="mods"  src="${element.img}" alt="${element.nameOfBook}" />
-                    <div class="rating">${'★'.repeat(element.rate)}${'☆'.repeat(5 - element.rate)}</div>
-                    <div id="book_name" >
-                        <h5>${element.nameOfBook}</h5>
+    });
+
+
+    filtration
+        .filter((item) => {
+            if (shopSearch.val().length === 0) {
+                return true;
+            } else {
+                return item.nameOfBook
+                    .toLowerCase()
+                    .includes(shopSearch.val().toLowerCase());
+            }
+        })
+        .forEach((element, indx) => {
+            const card = $(`
+                <div class="book_card aos-item" data-aos="fade-up"
+                     data-aos-duration="1000" data-id=${indx + 1}>
+                    <!-- Front of the card -->
+                    <div class="front">
+                        <img class="mods" src="${element.img}" alt="${element.nameOfBook}" />
+                        <div class="rating">${"★".repeat(element.rate)}${"☆".repeat(
+                5 - element.rate
+            )}</div>
+                        <div id="book_name">
+                            <h5>${element.nameOfBook}</h5>
+                        </div>
+                        <div class="book_info">
+                            <h5>${element.authorName}</h5>
+                            <h5>${element.yearOfPublish}</h5>
+                        </div>
+                        <div class="book_info">
+                            <button id=${element.id} class="addToCartBtn">Add To Cart <i class="bx bx-cart-add"></i></button>
+                            <h4>${element.price}</h4>
+                        </div>
                     </div>
-                    <div class="book_info">
-                    <h5>${element.authorName}</h5>
-                        <h5>${element.yearOfPublish}</h5>
-                    </div>
-                    <div class="book_info">
-                        <button id=${element.id} class='addToCartBtn'>Add To Cart  <i class='bx bx-cart-add'></i></button>
-                        <h4>${element.price}</h4>
+                    <!-- Back of the card -->
+                    <div class="back">
+                        <div class="description">
+                            <h5>About the Book</h5>
+                            <p>${element.description}</p>
+                        </div>
+                        <!-- Retain the "Add to Cart" button on the back side -->
+                        <div class="book_info">
+                            <button id=${element.id} class="addToCartBtn">Add To Cart <i class="bx bx-cart-add"></i></button>
+                        </div>
                     </div>
                 </div>
             `);
 
-        card.appendTo(wrap);
-    });
+            card.appendTo(wrap);
+        });
 
-    wrap.appendTo(shop)
-}
+    wrap.appendTo(shop);
+};
 
+
+// ---------
 shopSearch.on('input', () => {
 
     renderShop()
 });
 
 
-$(window).on('load', function () {
-    $(window).scrollTop(0);  
-});
+// $(window).on('load', function () {
+//     $(window).scrollTop(0);
+// });
 
-$(window).on('beforeunload', function () {
-    $(window).scrollTop(0); 
-});
+// $(window).on('beforeunload', function () {
+//     $(window).scrollTop(0);
+// });
+
 
 
 
@@ -996,31 +1146,38 @@ $(document).on('click', '#signout', (e) => {
     toggleLoggedIn()
 
 });
-
 const renderCart = () => {
-
+    let totalCartPrice = 0
+    paymentFooter.empty()
     wrapCart.empty();
     hideEveryThing();
     cart.removeClass('hidden');
-    
+
     const isLoggedIn = localStorage.getItem('isLoggedIn')
-    if (isLoggedIn ==1 ) {
-        
+    if (isLoggedIn == 1) {
         const userID = JSON.parse(localStorage.getItem('user'))
-        const carts = JSON.parse(localStorage.getItem('cart'))
+        const carts = JSON.parse(localStorage.getItem('cart'));
         const basket = carts.find(item => item.user_id === userID.id)
-            
-        
-        const filtered = books.filter((item)=>basket.book_ids.includes(item.id))
-        
-        if (filtered.length == 0){alert('cart is empty')
-            renderShop()
+        const filtered = books.filter((item) => {
+            if (basket.book_ids.includes(item.id)) {
+                totalCartPrice += +item.price.replace(/[^0-9.,]+/, '')
+
+                return true
+            }
+        })
+
+
+
+        const checkout = $(`<div class="checkoutPrice" >Price: ${totalCartPrice}$</div>
+        <div><button id="checkoutBtn">CheckOut (${filtered.length})</button></div>`);
+        if (!basket || basket.book_ids.length === 0) {
+            alert('cart is empty');
+            renderShop();
         }
-        
-        
+
         filtered.forEach((element, indx) => {
             const card = $(`
-                    <div class="book_card aos-item"  data-aos="fade-up"
+                    <div class="book_card book_cart_cart_item aos-item"  data-aos="fade-down"
                  data-aos-duration="1200" data-id=${indx + 1}>
                         <img class="mods"  src="${element.img}" alt="${element.nameOfBook}" />
                         <div class="rating">${'★'.repeat(element.rate)}${'☆'.repeat(5 - element.rate)}</div>
@@ -1039,9 +1196,20 @@ const renderCart = () => {
                 `);
             card.appendTo(wrapCart);
         });
-        wrapCart.appendTo(cart)
+
+
+        wrapCart.appendTo(cart);
+
+        $(document).on('click', '#checkoutBtn', () => {
+            basket.book_ids = [];
+            localStorage.setItem('cart', JSON.stringify(carts));
+            alert('enta df3t ya watee')
+            window.location.reload();
+        })
+
+        checkout.appendTo(paymentFooter);
     }
-    else{
+    else {
         alert("login first")
         renderHome()
     }
@@ -1054,13 +1222,13 @@ const renderCart = () => {
 
 
 $(document).on('click', '.removeFromCartBtn', (e) => {
-    const bookId = e.target.id; 
+    const bookId = e.target.id;
     const userID = JSON.parse(localStorage.getItem('user')).id
     const carts = JSON.parse(localStorage.getItem('cart'))
-    const cart =  carts.find(item => item.user_id === userID)
+    const cart = carts.find(item => item.user_id === userID)
     const indx = cart.book_ids.indexOf(bookId);
-    cart.book_ids.splice(indx , 1)
-    localStorage.setItem('cart' , JSON.stringify(carts))
+    cart.book_ids.splice(indx, 1)
+    localStorage.setItem('cart', JSON.stringify(carts))
     renderCart()
 })
 
@@ -1096,7 +1264,7 @@ $('#shop-nav').on('click', () => {
 });
 $('#cart-nav').on('click', () => {
     renderCart();
-    
+
 });
 
 initLocalStorage();
@@ -1115,5 +1283,4 @@ $(document).on('click', '#main-nav', () => {
 $(document).on('click', '#logo', () => {
     location.reload();
 });
-
 
